@@ -24,7 +24,6 @@ export default function TransactionsPage() {
 
     axios.post(`http://localhost:5000/nova-transacao/${transactionType}`, { value, description }, config)
       .then((res) => {
-        console.log(res.data)
         navigate('/home')
       })
       .catch(err => alert(err))

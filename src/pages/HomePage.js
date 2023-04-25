@@ -13,14 +13,29 @@ export default function HomePage() {
 
   const { token, setTransactionType } = useContext(UserContext)
   const [user, setUser] = useState({})
-  const [transactions, setTransactions] = useState([])
+  const [transactions, setTransactions] = useState([]);
+  const [saldo, setSaldo] = useState([]);
 
 
-  function goToTransactionPage(type){
+  function goToTransactionPage(type) {
     setTransactionType(type);
     navigate(`/nova-transacao/${type}`);
-}
+  }
 
+  function calculateBalance(transactions){
+      let negativeBalance = 0;
+      let positiveBalance = 0;
+
+      for (let index = 0; index < transactions.length; index++) {
+          if(transactions[index].tipo === 'entrada'){
+            positiveBalance += transactions[index].value
+          }else{
+            negativeBalance += transactions[index].value
+          }       
+      }
+
+      return positiveBalance - negativeBalance;
+  }
 
   useEffect(() => {
     const config = {
@@ -33,7 +48,8 @@ export default function HomePage() {
       .then((res) => {
         // setUser(res.data.name)
         setTransactions(res.data)
-        console.log(res.data)
+        let saldo = calculateBalance(res.data)
+        setSaldo(saldo)
       })
       .catch((err) => console.log(err))
   }, [])
@@ -42,7 +58,7 @@ export default function HomePage() {
     <HomeContainer>
       <Header>
         <h1>{user.name}</h1>
-        <BiExit />
+        <BiExit onClick={() => navigate('/')}/>
       </Header>
 
       <TransactionsContainer>
@@ -59,7 +75,7 @@ export default function HomePage() {
 
         <article>
           <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
+          <Value color={"positivo"}>{`R$ ${saldo},00`}</Value>
         </article>
       </TransactionsContainer>
 
