@@ -13,6 +13,7 @@ export default function HomePage() {
 
   const { token } = useContext(UserContext)
   const [user, setUser] = useState({})
+  const [transactions, setTransactions] = useState([])
 
   useEffect(() => {
     const config = {
@@ -22,9 +23,13 @@ export default function HomePage() {
     }
 
     axios.get("http://localhost:5000/home", config)
-      .then((res) => setUser(res.data))
+      .then((res) => {
+        // setUser(res.data)
+        setTransactions(res.data)
+        console.log(res.data)
+      })
       .catch((err) => console.log(err))
-  })
+  }, [])
 
   return (
     <HomeContainer>
@@ -35,21 +40,14 @@ export default function HomePage() {
 
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
-          </ListItemContainer>
-
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positsivo"}>3000,00</Value>
-          </ListItemContainer>
+          {transactions.map(transaction =>
+            <ListItemContainer>
+              <div>
+                <span>{transaction.currentDate}</span>
+                <strong>{transaction.description}</strong>
+              </div>
+              <Value color={"negativo"}>{transaction.value}</Value>
+            </ListItemContainer>)}
         </ul>
 
         <article>
@@ -58,18 +56,18 @@ export default function HomePage() {
         </article>
       </TransactionsContainer>
 
-     
-        <ButtonsContainer>
-          <button onClick={() =>  navigate('/nova-transacao/saida')}>
-            <AiOutlinePlusCircle />
-            <p>Nova <br /> entrada</p>
-          </button>
 
-          <button>
-            <AiOutlineMinusCircle />
-            <p>Nova <br />saída</p>
-          </button>
-        </ButtonsContainer>
+      <ButtonsContainer>
+        <button onClick={() => navigate('/nova-transacao/saida')}>
+          <AiOutlinePlusCircle />
+          <p>Nova <br /> entrada</p>
+        </button>
+
+        <button>
+          <AiOutlineMinusCircle />
+          <p>Nova <br />saída</p>
+        </button>
+      </ButtonsContainer>
     </HomeContainer>
   )
 }
