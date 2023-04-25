@@ -10,11 +10,12 @@ import { UserContext } from "./contexts/UserContext"
 export default function App() {
 
   const [token, setToken] = useState({})
+  const [transactionType, setTransactionType] = useState("")
   
   return (
     <PagesContainer>
       <BrowserRouter>
-        <UserContext.Provider value={{token, setToken}}>
+        <UserContext.Provider value={{token, setToken, transactionType, setTransactionType}}>
           <Routes>
             <Route path="/" element={<SignInPage />} />
             <Route path="/cadastro" element={<SignUpPage />} />

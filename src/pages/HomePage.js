@@ -11,9 +11,16 @@ export default function HomePage() {
 
   const navigate = useNavigate();
 
-  const { token } = useContext(UserContext)
+  const { token, setTransactionType } = useContext(UserContext)
   const [user, setUser] = useState({})
   const [transactions, setTransactions] = useState([])
+
+
+  function goToTransactionPage(type){
+    setTransactionType(type);
+    navigate(`/nova-transacao/${type}`);
+}
+
 
   useEffect(() => {
     const config = {
@@ -24,7 +31,7 @@ export default function HomePage() {
 
     axios.get("http://localhost:5000/home", config)
       .then((res) => {
-        // setUser(res.data)
+        // setUser(res.data.name)
         setTransactions(res.data)
         console.log(res.data)
       })
@@ -46,7 +53,7 @@ export default function HomePage() {
                 <span>{transaction.currentDate}</span>
                 <strong>{transaction.description}</strong>
               </div>
-              <Value color={"negativo"}>{transaction.value}</Value>
+              <Value color={transaction.tipo === "saida" ? "negativo" : "positivo"}>{`R$${transaction.value},00`}</Value>
             </ListItemContainer>)}
         </ul>
 
@@ -58,12 +65,12 @@ export default function HomePage() {
 
 
       <ButtonsContainer>
-        <button onClick={() => navigate('/nova-transacao/saida')}>
+        <button onClick={() => goToTransactionPage('entrada')}>
           <AiOutlinePlusCircle />
           <p>Nova <br /> entrada</p>
         </button>
 
-        <button>
+        <button onClick={() => goToTransactionPage('saida')}>
           <AiOutlineMinusCircle />
           <p>Nova <br />saída</p>
         </button>

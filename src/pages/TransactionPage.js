@@ -8,26 +8,26 @@ export default function TransactionsPage() {
 
   const navigate = useNavigate();
 
-  const { token } = useContext(UserContext)
+  const { token, transactionType } = useContext(UserContext)
 
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
 
   function novaTransacao(e) {
-     e.preventDefault();
-   
-     const config = {
+    e.preventDefault();
+
+    const config = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     }
 
-    axios.post('http://localhost:5000/nova-transacao/saida',{value, description}, config)
-    .then((res) => {
-      console.log(res.data)
-      navigate('/home')
-    })
-    .catch(err => alert(err))
+    axios.post(`http://localhost:5000/nova-transacao/${transactionType}`, { value, description }, config)
+      .then((res) => {
+        console.log(res.data)
+        navigate('/home')
+      })
+      .catch(err => alert(err))
 
   }
 
@@ -35,8 +35,8 @@ export default function TransactionsPage() {
     <TransactionsContainer>
       <h1>Nova TRANSAÇÃO</h1>
       <form onSubmit={novaTransacao}>
-        <input placeholder="Valor" type="text" value={value} onChange={e => setValue(e.target.value)} required/>
-        <input placeholder="Descrição" type="text" value={description} onChange={e => setDescription(e.target.value)} required/>
+        <input placeholder="Valor" type="text" value={value} onChange={e => setValue(e.target.value)} required />
+        <input placeholder="Descrição" type="text" value={description} onChange={e => setDescription(e.target.value)} required />
         <button type="submit">Salvar TRANSAÇÃO</button>
       </form>
     </TransactionsContainer>
