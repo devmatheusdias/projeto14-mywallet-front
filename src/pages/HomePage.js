@@ -1,12 +1,35 @@
+import axios from "axios";
 import styled from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import { useEffect, useContext, useState } from "react";
+import { UserContext } from '../contexts/UserContext';
+import { useNavigate } from "react-router-dom";
+
 
 export default function HomePage() {
+
+  const navigate = useNavigate();
+
+  const { token } = useContext(UserContext)
+  const [user, setUser] = useState({})
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    axios.get("http://localhost:5000/home", config)
+      .then((res) => setUser(res.data))
+      .catch((err) => console.log(err))
+  })
+
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
+        <h1>{user.name}</h1>
         <BiExit />
       </Header>
 
@@ -25,7 +48,7 @@ export default function HomePage() {
               <span>15/11</span>
               <strong>Salário</strong>
             </div>
-            <Value color={"positivo"}>3000,00</Value>
+            <Value color={"positsivo"}>3000,00</Value>
           </ListItemContainer>
         </ul>
 
@@ -35,18 +58,18 @@ export default function HomePage() {
         </article>
       </TransactionsContainer>
 
+     
+        <ButtonsContainer>
+          <button onClick={() =>  navigate('/nova-transacao/saida')}>
+            <AiOutlinePlusCircle />
+            <p>Nova <br /> entrada</p>
+          </button>
 
-      <ButtonsContainer>
-        <button>
-          <AiOutlinePlusCircle />
-          <p>Nova <br /> entrada</p>
-        </button>
-        <button>
-          <AiOutlineMinusCircle />
-          <p>Nova <br />saída</p>
-        </button>
-      </ButtonsContainer>
-
+          <button>
+            <AiOutlineMinusCircle />
+            <p>Nova <br />saída</p>
+          </button>
+        </ButtonsContainer>
     </HomeContainer>
   )
 }
