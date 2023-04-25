@@ -51,7 +51,7 @@ export default function HomePage() {
         let saldo = calculateBalance(res.data)
         setSaldo(saldo)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => alert(err))
   }, [])
 
   return (
